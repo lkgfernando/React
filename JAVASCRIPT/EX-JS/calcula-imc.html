@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/exercise.css">
     
-    <title>Function Js</title>
+    <title>Calcula IMC</title>
 </head>
 <body class="exercise">
     <header class="title-header">
@@ -24,15 +24,25 @@
 
     <main class="ex-main">
         <div class="content">
-           <h2 id="area">Bem vindo!</h2>
+           <h2 id="area">Calcula IMC</h2>
+            <form onsubmit="return calcular(event)">
+              <label>Digite seu peso:</label>
+              <input type="text" name="peso" id="peso" placeholder="Exemplo 65"> <br />
 
-           <button onclick="enter()">Acessar</button>
+              <label>Digite sua altura:</label>
+              <input type="text" name="altura" id="altura" placeholder="Exemplo 1.85"> <br />
+
+              <input type="submit" value="Calcular IMC">
+            </form> 
+            <div id="resultado">
+
+            </div>
         </div>
     </main><!--Fim main-->
 
     <footer class="footer-content">
         Fernando José Rodrigues
     </footer><!--Fim footer-->
-    <script src="../js/function.js"></script>
+    <script src="../js/imc.js"></script>
 </body>
 </html>
