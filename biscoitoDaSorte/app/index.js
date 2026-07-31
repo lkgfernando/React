@@ -1,47 +1,55 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 
+const BEARE_TOKEN = "QWRtaW46OTk=";
+
 export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      textoFrase: "Grandes jornadas começam com um simples passo.",
+      textoFrase: "Clique abaixo para abrir seu biscoito!",
       img: require("../assets/images/biscoito.png"),
+      loading: false,
     };
+
     this.quebraBiscoito = this.quebraBiscoito.bind(this);
     this.restart = this.restart.bind(this);
-
-    this.frases = [
-      "A sorte favorece os audaciosos.",
-      "Grandes jornadas começam com um simples passo.",
-      "Sua criatividade abrirá portas onde você menos espera.",
-      "Um amigo antigo trará uma boa notícia em breve.",
-      "O segredo do sucesso é a constância no objetivo.",
-      "Acredite no seu potencial e o resto virá naturalmente.",
-      "A paciência é a chave que abre a porta do aprendizado.",
-      "A vida trará uma surpresa agradável no momento certo.",
-      "Sua energia positiva atrai coisas incríveis para você.",
-      "Confie nos seus instintos; eles sabem o caminho.",
-      "A maior virtude é a capacidade de recomeçar.",
-      "Uma pequena atitude hoje trará um grande resultado amanhã.",
-      "Sorria! A felicidade é contagiosa.",
-      "Não conte os dias, faça os dias contarem.",
-      "Um desafio inesperado revelará a sua verdadeira força.",
-      "A boa sorte acompanha quem compartilha coisas boas.",
-      "Quem semeia gentileza, colhe grandes amizades.",
-      "O momento ideal para começar algo novo é agora.",
-      "Suas escolhas de hoje constroem o seu futuro.",
-      "A resposta que você procura virá em um momento de silêncio.",
-    ];
   }
 
-  quebraBiscoito() {
-    let numeroAleatorio = Math.floor(Math.random() * this.frases.length);
+  async quebraBiscoito() {
+    this.setState({ loading: true });
 
-    this.setState({
-      textoFrase: '"' + this.frases[numeroAleatorio] + '"',
-      img: require("../assets/images/biscoitoAberto.png"),
-    });
+    try {
+      const response = await fetch(
+        "http://192.168.0.11:2200/api/projeto/biscoitoDaSorte",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Basic QWRtaW46OTk=",
+          },
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error(`Erro na requisição: Status ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      this.setState({
+        textoFrase: `"${data.frase}"`,
+        img: require("../assets/images/biscoitoAberto.png"),
+      });
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+      this.setState({
+        textoFrase:
+          "Não foi possivel consulta a frase. Verifique a conexão ou o token",
+      });
+    } finally {
+      this.setState({ loading: false });
+    }
   }
 
   restart() {
